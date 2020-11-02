@@ -22,102 +22,109 @@ On the door is a handwritten sign.
 }
 */
 
+////
+///////  GAME SETTINGS
+///
 
 // ROOMS
-let visitedRoom = {
-  roomsAvailable: ["kitchen", "bedroom"]
+let visitedRooms = {
+  roomsAvailable: ["kitchen", "bedroom", "porch"]
 }
 
 let bedroom = {
-   hiddenitemcount: 2,
-   hiddenitems:['man','alarm clock'],
+  hiddenitems:['man','alarm clock', 'flashlight'],
+  close: false,
+  man: "Zzzzz, hey what's the big idea?!!! I'm sleeping",
+  alarm: "RRrrrrrriiinggg -alarm clock rings-",
+  flashlight: "Gosh, this flashlight needs batteries. I'll tuck this away in my bag for now"
 }
 
 let kitchen = {
-   hiddenitemcount: 1,
-   hiddenitems:['dog bone'],
+  hiddenitems:['dog bone'],
+  close: false,
+  dogbone: "that dog sure better be here some where, so I can feed it with this dog bone. Woof woof"
 }
 
 // INVENTORY
-let kitchenFound = 0;
-let bedroomFound = 0;
+let playerInventory = [];
 
-let missingItemsCount = bedroom['hiddenitemcount'] + kitchenFound['hiddenitemcount'];
-let foundItemsCount = bedroomFound + kitchenFound;
+// GAME MENU
+let menu = {
+  options: ["Search Room: type search (room name)", 
+            "Change Room: type change ", 
+            "Check inventory: type check inventory ", 
+            "Use item: type use (name of item)", 
+            "Quit game: type quit game or exit game"]
+}
 
-///ACTIONS
-function changeRoom(){
-   console.log ('Rooms available to visit: ' + visitedRoom['roomsAvailable']);
-   console.log('Ok, where do you want to go?' + ' Type kitchen or bedroom');
-   process.stdin.on("data", (chunk) => {
-   let newlocation = chunk.toString().trim();
-   if (newlocation.includes("bedroom")) {
-       /// Bed Room
-       console.log("You are in the " + newlocation);
-       console.log("Check for hidden items? Type: search (room name), for example: search bedroom");
-       ///// ENTER CODE
-       if(newlocation.includes('search') && newlocation.includes('bedroom')){
-          /// myRoom.search();       NOT WORKING YET
-          bedroomFound = bedroom['hiddenitemcount'];
-          console.log("GREAT JOB Detective! You found the bedrooom hidden items: " + " " + bedroom['hiddenitems']);
-          console.log("Current bedroomFound points is " + " " + bedroomFound);
-          console.log("closing the bedroom....");
-          visitedRoom['roomsAvailable'] = visitedRoom['roomsAvailable'].slice(0,1);
-          console.log("Rooms Available to visit: " + " " + visitedRoom['roomsAvailable']);
-       }
-   } else if (newlocation.includes("kitchen")) {
-       console.log("You are in the kitchen");
-      /// Kitchen
-      console.log("Check for hidden items? Type: search (room name), for example: search kitchen");
-      ///// ENTER CODE
-      if(newlocation.includes('search') && newlocation.includes('kitchen')){
-         /// myRoom.search();       NOT WORKING YET
-         kitchenFound = kitchen['hiddenitemcount'];
-         console.log("GREAT JOB Detective! You found the kitchen hidden items: " + " " + kitchen['hiddenitems']);
-         console.log("Current kitchenFound points is " + " " + kitchenFound);
-         console.log("closing the kitchen....");
-         visitedRoom['roomsAvailable'] = visitedRoom['roomsAvailable'].slice(0,1);
-         console.log("Rooms Available to visit: " + " " + visitedRoom['roomsAvailable']);
+
+
+
+////
+///////  'YOU' , the PLAYER
+///
+console.log(
+  "Hello. Welcome to the game. You are in the foyer.\n" +
+  "To see keywords, type 'menu' and press ENTER "
+);
+
+process.stdin.on("data", (chunk) => {
+  let newlocation = chunk.toString().trim();
+  if (newlocation.includes("menu")){
+      console.log(menu['options']);
+  }
+  if (newlocation.includes("bedroom")) {
+      ///
+      //// Bedroom
+      ///
+      console.log("You are in the bedroom ");
+      console.log("Check for hidden items? Type: search (room name)" + " or leave room");
+      if(newlocation.includes('search') && newlocation.includes('bedroom')){
+          console.log(bedroom['hiddenitems'].length); /// SANITY CHECK
+          for(let x = 0; x <= bedroom['hiddenitems'].length; x++){
+              playerInventory[x] = bedroom['hiddenitems'].pop();
+              console.log("Player inventory is " +  playerInventory + " ");
+          }
+          console.log(playerInventory);  /// SANITY CHECK
+          console.log(playerInventory.length);   /// SANITY CHECK
+          console.log("If you want to use an item, type () or (talk to) + item name");
       }
-   } else if(newlocation.includes("change") || newlocation.includes("leave") ){
-       console.log('Ok. Rooms available to visit: ' + visitedRoom['roomsAvailable']);
-   } else if (newlocation.includes("exit") || newlocation.includes("quit")) {
-       process.exit();
-   } else {
-       console.log( "I don't understand. Which room do you want to visit? "+ visitedRoom['roomsAvailable']
-       );
-   }
-   });
-}
-
-
+      if(newlocation.includes('use') && newlocation.includes('alarm')){
+          console.log(bedroom['alarm']);
+      }
+     
+  } else if (newlocation.includes("kitchen")) {
+       ///
+      //// Kitchen
+      ///
+      console.log("You are in the kitchen");
+      console.log("Check for hidden items? Type: search (room name)" + " or leave room");
+      if(newlocation.includes('search') && newlocation.includes('kitchen')){
+          console.log(kitchen['hiddenitems'].length); /// SANITY CHECK
+          for(let x = 0; x <= kitchen['hiddenitems'].length; x++){
+              playerInventory[x] = playerInventory + kitchen['hiddenitems'].pop();
+              console.log("Player inventory is " +  playerInventory + " ");
+          }
+          console.log(playerInventory);  /// SANITY CHECK
+          console.log(playerInventory.length);   /// SANITY CHECK
+          console.log("If you want to use an item, type () or (talk to) + item name");
+      }
+  } else if(newlocation.includes("change") || newlocation.includes("leave")){
+      console.log('You are back in the main foyer. Rooms available to visit: ' + visitedRooms['roomsAvailable'] + " " + "Which room do you want to visit?");
+  } else if (newlocation.includes("exit") || newlocation.includes("quit")) {
+      process.exit();
+  } else if(newlocation.includes("inventory")){
+      console.log(playerInventory);
+      console.log("length is " + playerInventory.length);
+  } else {
+      console.log( "Do you like apple pie? What would you like to do next?");
+  }
+});
 
 ///
-///// SEARCH THE ROOOM
+///// JAVASCRIPT CLASS and METHODS
 ///
-class Room{
-   constructor(newlocation){
-       this.room = newlocation
 
-   }
-   describe(){
-     changeRoom();
-   }
 
-   search(){
-       if( this.room.includes('search') && this.room.includes('bedroom') ){
-           console.log ("Zzz... I'm sleepy because I am in bedroom. I'd better get out");
-           if(bedroom['hiddenitemcount'] > 0 ){
-               console.log(bedroom['hiddenitems']);// HOW CAN I CHANGE TO  'THIS.ROOM' ?
-           }
-       } else if(this.room.includes('search') && this.includes('kitchen') ){
-           console.log ("Are you hungry? Hmm, I wonder what/ns here for food");
-           if(bedroom['hiddenitemcount'] > 0 ){
-               console.log(kitchen['hiddenitems']);// HOW CAN I CHANGE TO  'THIS.ROOM' ?
-           }
-       }
-   }
 
-}
-let myRoom = new Room('porch');
-console.log(myRoom.describe()); //    
+

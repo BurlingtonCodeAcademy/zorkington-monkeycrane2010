@@ -22,6 +22,7 @@ On the door is a handwritten sign.
 }
 */
 
+
 ////
 ///////  GAME SETTINGS
 ///
@@ -33,28 +34,59 @@ let visitedRooms = {
 
 let bedroom = {
   hiddenitems:['man','alarm clock', 'flashlight'],
-  close: false,
-  man: "Zzzzz, hey what's the big idea?!!! I'm sleeping",
-  alarm: "RRrrrrrriiinggg -alarm clock rings-",
-  flashlight: "Gosh, this flashlight needs batteries. I'll tuck this away in my bag for now"
 }
 
 let kitchen = {
   hiddenitems:['dog bone'],
-  close: false,
-  dogbone: "that dog sure better be here some where, so I can feed it with this dog bone. Woof woof"
 }
 
 // INVENTORY
 let playerInventory = [];
 
+
+///
+///// HIDDEN ITEMS
+///
+class Object{
+  constructor(item, description, state){
+      this.item = item
+      this.description = description
+      this.state = state
+  }
+
+    describe() {
+       return this.description;
+      
+  }
+
+    flip() {  
+      this.state =! this.state;  
+      return this.state;
+  }
+   
+    add() {
+      playerInventory.push(this.item);
+      return "Print playerInventory " +  playerInventory.length;
+  }
+ 
+}
+
+let myNote = new Object('note', 'Note says: Feeling hungry? Try the kitchen', true);
+let myClock = new Object('clock', "RRrrrrrriiinggg -alarm clock rings-", false);
+let myFlashlight = new Object('flashlight', "Gosh, this flashlight needs batteries. I'll tuck this away in my bag for now", false);
+let myMan = new Object ('man', 'Zzzzz, hey what\'s the big idea?!!! I\'m sleeping. (TALK TO MAN AGAIN)', true);
+let myDogbone = new Object ('dogbone', 'that dog sure better be here some where, so I can feed it with this dog bone. Woof woof', true);
+
+
+
+
+
 // GAME MENU
 let menu = {
   options: ["Search Room: type search (room name)", 
             "Change Room: type change ", 
-            "Check inventory: type check inventory ", 
-            "Use item: type use (name of item)", 
-            "Quit game: type quit game or exit game"]
+            "Inventory: type check inventory", 
+            "Quit game: type quit or exit game"]
 }
 
 
@@ -65,6 +97,7 @@ let menu = {
 ///
 console.log(
   "Hello. Welcome to the game. You are in the foyer.\n" +
+  "Open rooms to visit. " + visitedRooms['roomsAvailable'] +
   "To see keywords, type 'menu' and press ENTER "
 );
 
@@ -72,43 +105,49 @@ process.stdin.on("data", (chunk) => {
   let newlocation = chunk.toString().trim();
   if (newlocation.includes("menu")){
       console.log(menu['options']);
+  } else if (newlocation.includes('available roooms')) {
+      console.log("Open rooms to visit. " + visitedRooms['roomsAvailable']);
   }
-  if (newlocation.includes("bedroom")) {
+  if (newlocation.includes('bedroom')) {
       ///
       //// Bedroom
       ///
       console.log("You are in the bedroom ");
       console.log("Check for hidden items? Type: search (room name)" + " or leave room");
       if(newlocation.includes('search') && newlocation.includes('bedroom')){
-          console.log(bedroom['hiddenitems'].length); /// SANITY CHECK
-          for(let x = 0; x <= bedroom['hiddenitems'].length; x++){
-              playerInventory[x] = bedroom['hiddenitems'].pop();
-              console.log("Player inventory is " +  playerInventory + " ");
-          }
-          console.log(playerInventory);  /// SANITY CHECK
-          console.log(playerInventory.length);   /// SANITY CHECK
-          console.log("If you want to use an item, type () or (talk to) + item name");
+       
+          console.log(myNote.add());
+          console.log(myClock.add());
+          console.log(myFlashlight.add());
+          console.log(myMan.add());
+      
       }
-      if(newlocation.includes('use') && newlocation.includes('alarm')){
-          console.log(bedroom['alarm']);
-      }
-     
-  } else if (newlocation.includes("kitchen")) {
+    
+  } else if (newlocation.includes('kitchen')) {
        ///
       //// Kitchen
       ///
       console.log("You are in the kitchen");
       console.log("Check for hidden items? Type: search (room name)" + " or leave room");
       if(newlocation.includes('search') && newlocation.includes('kitchen')){
-          console.log(kitchen['hiddenitems'].length); /// SANITY CHECK
-          for(let x = 0; x <= kitchen['hiddenitems'].length; x++){
-              playerInventory[x] = playerInventory + kitchen['hiddenitems'].pop();
-              console.log("Player inventory is " +  playerInventory + " ");
-          }
-          console.log(playerInventory);  /// SANITY CHECK
-          console.log(playerInventory.length);   /// SANITY CHECK
-          console.log("If you want to use an item, type () or (talk to) + item name");
+          
+          console.log(myDogbone.add());
+          
       }
+
+  } else if (newlocation.includes('note') && playerInventory.includes('note')) {
+      console.log(myNote.describe());
+  } else if (newlocation.includes('man') && playerInventory.includes('man')) {
+      let talk = 1;
+      if (talk === 1){
+          console.log(myMan.describe());
+      }
+      talk = 2;
+      if (talk === 2){
+          console.log("You're still here?  OK, well, since you're here. Can you find my dog? I think I left the 'dog bone' in the kitchen... (GO VISIT KITCHEN)");
+      }
+  }  else if (newlocation.includes('dogbone') && playerInventory.includes('dogbone')) {
+      console.log(myDogbone.describe());
   } else if(newlocation.includes("change") || newlocation.includes("leave")){
       console.log('You are back in the main foyer. Rooms available to visit: ' + visitedRooms['roomsAvailable'] + " " + "Which room do you want to visit?");
   } else if (newlocation.includes("exit") || newlocation.includes("quit")) {
@@ -120,11 +159,3 @@ process.stdin.on("data", (chunk) => {
       console.log( "Do you like apple pie? What would you like to do next?");
   }
 });
-
-///
-///// JAVASCRIPT CLASS and METHODS
-///
-
-
-
-

@@ -74,8 +74,8 @@ class Object{
 let myNote = new Object('note', 'Note says: Feeling hungry? Try the kitchen', true);
 let myClock = new Object('clock', "RRrrrrrriiinggg -alarm clock rings-", false);
 let myFlashlight = new Object('flashlight', "Gosh, this flashlight needs batteries. I'll tuck this away in my bag for now", false);
-let myMan = new Object ('man', 'Zzzzz, hey what\'s the big idea?!!! I\'m sleeping. (TALK TO MAN AGAIN)', true);
-let myDogbone = new Object ('dogbone', 'that dog sure better be here some where, so I can feed it with this dog bone. Woof woof', true);
+let myMan = new Object ('man', 'Zzzzz, hey what\'s the big idea?!!! I\'m sleeping.\n (TALK TO MAN AGAIN)', true);
+let myDogbone = new Object ('dogbone', "'That dog sure better be here some where,\n so I can feed it with this DOGBONE.\n Woof woof'", true);
 
 
 
@@ -97,8 +97,14 @@ let menu = {
 ///
 console.log(
   "Hello. Welcome to the game. You are in the foyer.\n" +
-  "Open rooms to visit. " + visitedRooms['roomsAvailable'] +
-  "To see keywords, type 'menu' and press ENTER "
+  "Rooms you can visit. " + visitedRooms['roomsAvailable'] + "\n"+
+  "MISSION: \n" + 
+  "1) Type a room name and press ENTER,\n" +  
+  "2) Search in the room for hidden objects \n" + 
+  "3) Type change room to change room and \n" + 
+  "At anytime, type 'check inventory' \n" + 
+  "For user controls, type (menu)\n" +
+  "To exit game, type (exit)"
 );
 
 process.stdin.on("data", (chunk) => {
@@ -113,13 +119,14 @@ process.stdin.on("data", (chunk) => {
       //// Bedroom
       ///
       console.log("You are in the bedroom ");
-      console.log("Check for hidden items? Type: search (room name)" + " or leave room");
+      console.log("Check for hidden items? Type: search (room name)");
       if(newlocation.includes('search') && newlocation.includes('bedroom')){
        
           console.log(myNote.add());
           console.log(myClock.add());
           console.log(myFlashlight.add());
           console.log(myMan.add());
+          console.log("CHECK INVENTORY? type check inventory."); 
       
       }
     
@@ -128,11 +135,11 @@ process.stdin.on("data", (chunk) => {
       //// Kitchen
       ///
       console.log("You are in the kitchen");
-      console.log("Check for hidden items? Type: search (room name)" + " or leave room");
+      console.log("Check for hidden items? Type: search (room name)");
       if(newlocation.includes('search') && newlocation.includes('kitchen')){
           
           console.log(myDogbone.add());
-          
+          console.log("CHECK INVENTORY? type check inventory."); 
       }
 
   } else if (newlocation.includes('note') && playerInventory.includes('note')) {
@@ -144,7 +151,7 @@ process.stdin.on("data", (chunk) => {
       }
       talk = 2;
       if (talk === 2){
-          console.log("You're still here?  OK, well, since you're here. Can you find my dog? I think I left the 'dog bone' in the kitchen... (GO VISIT KITCHEN)");
+          console.log("You're still here? OK, well, since you're here. Can you find my dog?\n I think I left the 'DOGBONE' in the kitchen... (GO VISIT KITCHEN)");
       }
   }  else if (newlocation.includes('dogbone') && playerInventory.includes('dogbone')) {
       console.log(myDogbone.describe());
@@ -155,6 +162,7 @@ process.stdin.on("data", (chunk) => {
   } else if(newlocation.includes("inventory")){
       console.log(playerInventory);
       console.log("length is " + playerInventory.length);
+      console.log("USE ITEM? Type use (item name or talk to item).")
   } else {
       console.log( "Do you like apple pie? What would you like to do next?");
   }

@@ -227,11 +227,11 @@ process.stdin.on("data", (chunk) => {
       if(myYard.state === "closed"){
           console.log(myYard.blockentry());
           console.log("barking in the distance\n I think that man\'s lost dog is behind this door. But this door is locked. (there's a number pad lock)\n Come back to the YARD when you have the 5-digit code. What's the code?");
-              if(newlocation.includes('code 12345')){
+              if(newlocation.includes("code 12345")){
                   myYard.state = "open";
                   Task6.flip();
               }
-      } else if (myYard.state === 'open' && newlocation.includes('code 584')) {
+      } else if (myYard.state === 'open') {
           console.log ("you are in the YARD");
           Task7.flip();
       }

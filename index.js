@@ -98,7 +98,7 @@ let myClock = new Object('clock', "RRrrrrrriiinggg -alarm clock rings-", false);
 let myFlashlight = new Object('flashlight', "Gosh, this flashlight needs batteries. I'll tuck this away in my bag for now", false);
 let myMan = new Object ('man', 'Zzzzz, hey what\'s the big idea?!!! I\'m sleeping.\n (TALK TO MAN AGAIN)', false);
 let myMan2 = new Object ('man2',"You're still here? OK, well, since you're here. Can you find my dog?\n I think I left the 'DOGBONE' in the kitchen... (GO VISIT KITCHEN)", false);
-let myEnvelope = new Object('envelope', "type exactly 'code 584'", true);
+let myEnvelope = new Object('envelope', "type exactly 'code 12345'", true);
 let myDogbone = new Object ('dogbone', "'That dog sure better be here some where,\n so I can feed it with this DOGBONE.\n Woof woof'", true);
 let myDog = new Object ('dog', "'Woof woof!' (wags tail)'", false);
 

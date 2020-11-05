@@ -108,7 +108,7 @@ let myDog = new Object ('dog', "'Woof woof!' (wags tail)'", false);
 
 // GAME MENU
 let menu = {
-  options: ["Status: " + " Kitchen:  " + myKitchen.state + " Bedroom: " + myBedroom.state + " Yard: " + myYard.state, 
+  options: ["Status: " + " Bedroom: " + myBedroom.state + " Kitchen:  " + myKitchen.state + " Yard: " + myYard.state, 
             "Inventory: type check inventory", 
             "Quit game: type quit or exit"]
 }
@@ -142,8 +142,7 @@ let Task7 = new Mission('task7', 'Visit Yard STATUS', false);
 ///////  'YOU' , the PLAYER
 ///
 console.log(
-  "Hello. Welcome to the game. You are in the foyer.\n" +
-  "To see missions, type 'menu' then press ENTER ");
+  "Hello. Welcome to 182 Main St. You are standing on Main Street between Church and South Winooski\n There is a door here. A keypad sits on the handle\n On the door is a handwritten sign\n ");
 
 process.stdin.on("data", (chunk) => {
   let newlocation = chunk.toString().trim();
@@ -160,6 +159,9 @@ process.stdin.on("data", (chunk) => {
       console.log(menu['options']);
   } else if (newlocation.includes('available roooms')) {
       console.log("Open rooms to visit. " + visitedRooms['roomsAvailable']);
+  } else if (newlocation.includes("read sign")){
+    console.log("The sign says 'Welcome to Burlington Code Academy!' Come on in... You are in the foyer.");
+    console.log("Type 'menu' then press ENTER");
   }
   if (newlocation.includes('bedroom')) {
       ///
@@ -224,8 +226,8 @@ process.stdin.on("data", (chunk) => {
       ///           
       if(myYard.state === "closed"){
           console.log(myYard.blockentry());
-          console.log("barking in the distance\n I think that man\'s lost dog is behind this door. But this door is locked. (there's a number pad lock)\n Come back when you have the code");
-              if(newlocation.includes('code 584')){
+          console.log("barking in the distance\n I think that man\'s lost dog is behind this door. But this door is locked. (there's a number pad lock)\n Come back to the YARD when you have the 5-digit code. What's the code?");
+              if(newlocation.includes('code 12345')){
                   myYard.state = "open";
                   Task6.flip();
               }
@@ -233,10 +235,15 @@ process.stdin.on("data", (chunk) => {
           console.log ("you are in the YARD");
           Task7.flip();
       }
-  } else if (newlocation.includes('open envelope') && playerInventory.includes('envelope')) {
+  } else if (newlocation.includes('use envelope') && playerInventory.includes('envelope')) {
     console.log(myEnvelope.read1());
   } else if (newlocation.includes('dogbone') && playerInventory.includes('dogbone')) {
       console.log(myDogbone.read1());
+      console.log("THANK YOU SO MUCH!! You've found my dog.\n THE END");
+      process.exit();
+      ///
+      //// GAME END
+      ///   
   } else if(newlocation.includes("change") || newlocation.includes("leave")){
       console.log('You are back in the main foyer. Rooms available to visit: ' + visitedRooms['roomsAvailable'] + " " + "Which room do you want to visit?");
   } else if (newlocation.includes("exit") || newlocation.includes("quit")) {
@@ -244,7 +251,7 @@ process.stdin.on("data", (chunk) => {
   } else if(newlocation.includes("inventory")){
       console.log(playerInventory);
       console.log("length is " + playerInventory.length);
-      console.log("USE ITEM? Type use (item name or talk to item).")
+      console.log("Type 'use [item]' or 'talk to [item]'");
   } else {
       console.log( "Do you like apple pie? What would you like to do next?");
   }

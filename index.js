@@ -60,28 +60,21 @@ let myYard = new Room ('yard', null , 'closed', false);
 
 // INVENTORY
 let playerInventory = [];
+let mancontainer = [];
 
 
 ///
 ///// HIDDEN ITEMS
 ///
 class Object{
-  constructor(item, note1, note2, state){
+  constructor(item, note1, state){
       this.item = item
       this.note1 = note1
-      this.note2 = note2
       this.state = state
   }
 
     read1() {
       console.log(this.note1);
-      if (this.item === 'man'){
-        myMan.flip();
-      } 
-  }
-
-    read2() {
-      return this.note2;
   }
 
     flip() {  
@@ -94,13 +87,20 @@ class Object{
       return "Print playerInventory " +  playerInventory.length;
   }
  
+    mancontainer(){
+        mancontainer.push(this.item);
+        return "Print ManContainer  " +  mancontainer.length;
+    }
 }
 
-let myNote = new Object('note', 'Note says: Feeling hungry? Try the kitchen', null , true);
-let myClock = new Object('clock', "RRrrrrrriiinggg -alarm clock rings-", null, false);
-let myFlashlight = new Object('flashlight', "Gosh, this flashlight needs batteries. I'll tuck this away in my bag for now", null , false);
-let myMan = new Object ('man', 'Zzzzz, hey what\'s the big idea?!!! I\'m sleeping.\n (TALK TO MAN AGAIN)', "You're still here? OK, well, since you're here. Can you find my dog?\n I think I left the 'DOGBONE' in the kitchen... (GO VISIT KITCHEN)", false);
-let myDogbone = new Object ('dogbone', "'That dog sure better be here some where,\n so I can feed it with this DOGBONE.\n Woof woof'", null, true);
+let myNote = new Object('note', 'Note says: Feeling hungry? Try the kitchen', true);
+let myClock = new Object('clock', "RRrrrrrriiinggg -alarm clock rings-", false);
+let myFlashlight = new Object('flashlight', "Gosh, this flashlight needs batteries. I'll tuck this away in my bag for now", false);
+let myMan = new Object ('man', 'Zzzzz, hey what\'s the big idea?!!! I\'m sleeping.\n (TALK TO MAN AGAIN)', false);
+let myMan2 = new Object ('man2',"You're still here? OK, well, since you're here. Can you find my dog?\n I think I left the 'DOGBONE' in the kitchen... (GO VISIT KITCHEN)", false);
+let myEnvelope = new Object('envelope', "type exactly 'code 584'", true);
+let myDogbone = new Object ('dogbone', "'That dog sure better be here some where,\n so I can feed it with this DOGBONE.\n Woof woof'", true);
+let myDog = new Object ('dog', "'Woof woof!' (wags tail)'", false);
 
 
 
@@ -108,13 +108,34 @@ let myDogbone = new Object ('dogbone', "'That dog sure better be here some where
 
 // GAME MENU
 let menu = {
-  options: ["Rooms: " + " Kitchen:  " + myKitchen.state + " Bedroom: " + myBedroom.state, 
-            "Change Room: type change ", 
+  options: ["Status: " + " Kitchen:  " + myKitchen.state + " Bedroom: " + myBedroom.state + " Yard: " + myYard.state, 
             "Inventory: type check inventory", 
-            "Quit game: type quit or exit game"]
+            "Quit game: type quit or exit"]
 }
 
+class Mission{
+  constructor(item, description, state){
+      this.item = item
+      this.description = description
+      this.state = state
+  }
 
+    describe() {
+      return this.description;
+    }
+
+    flip() {
+      this.state = true;
+      console.log(this.state);
+    }
+  }
+let Task1 = new Mission('task1', 'Visit bedroom STATUS', true);
+let Task2 = new Mission('task2', 'Check bedroom for hidden items STATUS', false);
+let Task3 = new Mission('task3', 'Talk to man in bedroom STATUS', false);
+let Task4 = new Mission('task4', 'Find out how you can help the man STATUS', false);
+let Task5 = new Mission('task5', 'Find dogbone STATUS', false);
+let Task6 = new Mission('task6', 'Enter right code to unlock door to code STATUS', false);
+let Task7 = new Mission('task7', 'Visit Yard STATUS', false);
 
 
 ////
@@ -122,17 +143,20 @@ let menu = {
 ///
 console.log(
   "Hello. Welcome to the game. You are in the foyer.\n" +
-  "Rooms you can visit. " + visitedRooms['roomsAvailable'] + "\n"+
-  "MISSION: \n" + 
-  "1) Type a room name and press ENTER,\n" +  
-  "2) Search in the room for hidden objects \n" +
-  "At anytime, type 'check inventory' \n" + 
-  "To exit game, type (exit)"
-);
+  "To see missions, type 'menu' then press ENTER ");
 
 process.stdin.on("data", (chunk) => {
   let newlocation = chunk.toString().trim();
   if (newlocation.includes("menu")){
+      console.log("MISSION: \n" + 
+      "Task 1: " + Task1.describe() + " - " + Task1.state + "\n" +
+      "Task 2: " + Task2.describe() + " - " + Task2.state + "\n" +
+      "Task 3: " + Task3.describe() + " - " + Task3.state + "\n" +
+      "Task 4: " + Task4.describe() + " - " + Task4.state + "\n" +
+      "Task 5: " + Task5.describe() + " - " + Task5.state + "\n" +
+      "Task 6: " + Task6.describe() + " - " + Task6.state + "\n" +
+      "Task 7: " + Task7.describe() + " - " + Task7.state);
+      console.log("Here are your game controls:");
       console.log(menu['options']);
   } else if (newlocation.includes('available roooms')) {
       console.log("Open rooms to visit. " + visitedRooms['roomsAvailable']);
@@ -144,11 +168,10 @@ process.stdin.on("data", (chunk) => {
       if(myBedroom.state === "closed"){
         console.log(myBedroom.blockentry());
       } else if (myBedroom.state === "open"){
-
           console.log("You are in the bedroom ");
           console.log("Check for hidden items? Type: search (room name)");
           if(newlocation.includes('search') && newlocation.includes('bedroom')){
-          
+              Task2.flip();
               console.log(myNote.add());
               console.log(myClock.add());
               console.log(myFlashlight.add());
@@ -160,7 +183,22 @@ process.stdin.on("data", (chunk) => {
       }
      
     
-  } else if (newlocation.includes('kitchen')) {
+  } else if (newlocation.includes('talk to man') && playerInventory.includes('man')) {
+    console.log(myMan.mancontainer());
+    if (mancontainer.length === 1){   
+        console.log(myMan.read1());
+        console.log(myMan.flip());
+    }
+    if (mancontainer.length === 2 && myMan.state === true ){
+        console.log(myMan2.read1());
+        myKitchen.state = "open";
+        Task3.flip();
+        Task4.flip();
+    }
+
+ } else if (newlocation.includes('note') && playerInventory.includes('note')) {
+  console.log(myNote.read1());
+ } else if (newlocation.includes('kitchen')) {
        ///
       //// Kitchen
       ///
@@ -173,22 +211,30 @@ process.stdin.on("data", (chunk) => {
           console.log("Check for hidden items? Type: search (room name)");
           if(newlocation.includes('search') && newlocation.includes('kitchen')){
               console.log(myDogbone.add());
+              console.log(myEnvelope.add());
+              Task5.flip();
               console.log("CHECK INVENTORY? type check inventory."); 
           }
           
       }
 
-  } else if (newlocation.includes('note') && playerInventory.includes('note')) {
-      console.log(myNote.read1());
-  } else if (newlocation.includes('man') && playerInventory.includes('man')) {
-      let talk = 1;
-      if (talk === 1){
-          console.log(myMan.read1());
+  } else if (newlocation.includes("yard")){
+      ///
+      //// Yard
+      ///           
+      if(myYard.state === "closed"){
+          console.log(myYard.blockentry());
+          console.log("barking in the distance\n I think that man\'s lost dog is behind this door. But this door is locked. (there's a number pad lock)\n Come back when you have the code");
+              if(newlocation.includes('code 584')){
+                  myYard.state = "open";
+                  Task6.flip();
+              }
+      } else if (myYard.state === 'open' && newlocation.includes('code 584')) {
+          console.log ("you are in the YARD");
+          Task7.flip();
       }
-      if (playerInventory.includes("man") && myMan.state === true ){
-          console.log(myMan.read2());
-          myKitchen.state = "open";
-      }
+  } else if (newlocation.includes('open envelope') && playerInventory.includes('envelope')) {
+    console.log(myEnvelope.read1());
   } else if (newlocation.includes('dogbone') && playerInventory.includes('dogbone')) {
       console.log(myDogbone.read1());
   } else if(newlocation.includes("change") || newlocation.includes("leave")){

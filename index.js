@@ -78,7 +78,7 @@ class Object{
   }
 
     flip() {  
-      this.state =! this.state;  
+      this.state = true;  
       return this.state;
   }
    
@@ -97,8 +97,8 @@ let myNote = new Object('note', 'Note says: Feeling hungry? Try the kitchen', tr
 let myClock = new Object('clock', "RRrrrrrriiinggg -alarm clock rings-", false);
 let myFlashlight = new Object('flashlight', "Gosh, this flashlight needs batteries. I'll tuck this away in my bag for now", false);
 let myMan = new Object ('man', 'Zzzzz, hey what\'s the big idea?!!! I\'m sleeping.\n (TALK TO MAN AGAIN)', false);
-let myMan2 = new Object ('man2',"You're still here? OK, well, since you're here. Can you find my dog?\n I think I left the 'DOGBONE' in the kitchen... (GO VISIT KITCHEN)", false);
-let myEnvelope = new Object('envelope', "type exactly 'code 12345'", true);
+let myMan2 = new Object ('man2',"You're still here? OK, well, since you're here. Can you help me find my lost dog, please?\n I think I left the 'DOGBONE' in the kitchen... (GO VISIT KITCHEN)", false);
+let myEnvelope = new Object('envelope', "type exactly 'code 12345'", false);
 let myDogbone = new Object ('dogbone', "'That dog sure better be here some where,\n so I can feed it with this DOGBONE.\n Woof woof'", true);
 let myDog = new Object ('dog', "'Woof woof!' (wags tail)'", false);
 
@@ -136,13 +136,14 @@ let Task4 = new Mission('task4', 'Find out how you can help the man STATUS', fal
 let Task5 = new Mission('task5', 'Find dogbone STATUS', false);
 let Task6 = new Mission('task6', 'Enter right code to unlock door to code STATUS', false);
 let Task7 = new Mission('task7', 'Visit Yard STATUS', false);
+let Task8 = new Mission('task8', 'Feed hungry dog', false);
 
 
 ////
 ///////  'YOU' , the PLAYER
 ///
 console.log(
-  "Hello. Welcome to 182 Main St. You are standing on Main Street between Church and South Winooski\n There is a door here. A keypad sits on the handle\n On the door is a handwritten sign\n ");
+  "Hello. Welcome to 182 Main St. You are standing on Main Street between Church and South Winooski. There is a door here. On the door is a handwritten sign\n TYPE read sign and press ENTER");
 
 process.stdin.on("data", (chunk) => {
   let newlocation = chunk.toString().trim();
@@ -199,7 +200,7 @@ process.stdin.on("data", (chunk) => {
     }
 
  } else if (newlocation.includes('note') && playerInventory.includes('note')) {
-  console.log(myNote.read1());
+       console.log(myNote.read1());
  } else if (newlocation.includes('kitchen')) {
        ///
       //// Kitchen
@@ -209,8 +210,8 @@ process.stdin.on("data", (chunk) => {
         console.log("I think I hear someone snoring in the bedroom...")
       } else if (myKitchen.state === "open"){
 
-          console.log("You are in the kitchen");
-          console.log("Check for hidden items? Type: search (room name)");
+        console.log("You are in the kitchen");
+        console.log("Check for hidden items? Type: search (room name)");
           if(newlocation.includes('search') && newlocation.includes('kitchen')){
               console.log(myDogbone.add());
               console.log(myEnvelope.add());
@@ -220,6 +221,16 @@ process.stdin.on("data", (chunk) => {
           
       }
 
+  } else if (newlocation.includes('envelope') && playerInventory.includes('envelope')) {
+      console.log(myEnvelope.read1());
+      console.log(myEnvelope.state = true);
+
+
+      
+  } else if(newlocation.includes("12345")){
+    console.log("that's the right code");
+    myYard.state = "open";
+    Task6.flip();
   } else if (newlocation.includes("yard")){
       ///
       //// Yard
@@ -227,17 +238,15 @@ process.stdin.on("data", (chunk) => {
       if(myYard.state === "closed"){
           console.log(myYard.blockentry());
           console.log("barking in the distance\n I think that man\'s lost dog is behind this door. But this door is locked. (there's a number pad lock)\n Come back to the YARD when you have the 5-digit code. What's the code?");
-              if(newlocation.includes("code 12345")){
-                  myYard.state = "open";
-                  Task6.flip();
-              }
-      } else if (myYard.state === 'open') {
+           ///// ENTER  IF / ELSE  PASSCODE  checker here
+        } else if (myYard.state === 'open' && myEnvelope.state === true) {
           console.log ("you are in the YARD");
           Task7.flip();
+          console.log(" ...barking in the distance... " + " What can I do to attract the dog? Shall I check my inventory?");
       }
-  } else if (newlocation.includes('use envelope') && playerInventory.includes('envelope')) {
-    console.log(myEnvelope.read1());
-  } else if (newlocation.includes('dogbone') && playerInventory.includes('dogbone')) {
+     
+  } else if (newlocation.includes('use dogbone') && playerInventory.includes('dogbone') && myYard.state === "open") {
+      Task8.flip();
       console.log(myDogbone.read1());
       console.log("THANK YOU SO MUCH!! You've found my dog.\n THE END");
       process.exit();

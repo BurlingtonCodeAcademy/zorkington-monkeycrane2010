@@ -142,126 +142,116 @@ let Task8 = new Mission('task8', 'Feed hungry dog', false);
 ////
 ///////  'YOU' , the PLAYER
 ///
-console.log(
-  "Hello. Welcome to 182 Main St. You are standing on Main Street between Church and South Winooski. There is a door here. On the door is a handwritten sign\n TYPE read sign and press ENTER");
-
 process.stdin.on("data", (chunk) => {
   let newlocation = chunk.toString().trim();
   if (newlocation.includes("menu")){
-      console.log("MISSION: \n" + 
-      "Task 1: " + Task1.describe() + " - " + Task1.state + "\n" +
-      "Task 2: " + Task2.describe() + " - " + Task2.state + "\n" +
-      "Task 3: " + Task3.describe() + " - " + Task3.state + "\n" +
-      "Task 4: " + Task4.describe() + " - " + Task4.state + "\n" +
-      "Task 5: " + Task5.describe() + " - " + Task5.state + "\n" +
-      "Task 6: " + Task6.describe() + " - " + Task6.state + "\n" +
-      "Task 7: " + Task7.describe() + " - " + Task7.state);
-      console.log("Here are your game controls:");
-      console.log(menu['options']);
+        console.log("MISSION: \n" + 
+        "Task 1: " + Task1.describe() + " - " + Task1.state + "\n" +
+        "Task 2: " + Task2.describe() + " - " + Task2.state + "\n" +
+        "Task 3: " + Task3.describe() + " - " + Task3.state + "\n" +
+        "Task 4: " + Task4.describe() + " - " + Task4.state + "\n" +
+        "Task 5: " + Task5.describe() + " - " + Task5.state + "\n" +
+        "Task 6: " + Task6.describe() + " - " + Task6.state + "\n" +
+        "Task 7: " + Task7.describe() + " - " + Task7.state);
+        console.log("Here are your game controls:");
+        console.log(menu['options']);
   } else if (newlocation.includes('available roooms')) {
-      console.log("Open rooms to visit. " + visitedRooms['roomsAvailable']);
+        console.log("Open rooms to visit. " + visitedRooms['roomsAvailable']);
   } else if (newlocation.includes("read sign")){
-    console.log("The sign says 'Welcome to Burlington Code Academy!' Come on in... You are in the foyer.");
-    console.log("Type 'menu' then press ENTER");
+        console.log("The sign says 'Welcome to Burlington Code Academy!' Come on in... You are in the foyer.");
+        console.log("Type 'menu' then press ENTER");
   }
   if (newlocation.includes('bedroom')) {
       ///
       //// Bedroom
       ///
-      if(myBedroom.state === "closed"){
+    if(myBedroom.state === "closed"){
         console.log(myBedroom.blockentry());
-      } else if (myBedroom.state === "open"){
-          console.log("You are in the bedroom ");
-          console.log("Check for hidden items? Type: search (room name)");
-          if(newlocation.includes('search') && newlocation.includes('bedroom')){
-              Task2.flip();
-              console.log(myNote.add());
-              console.log(myClock.add());
-              console.log(myFlashlight.add());
-              console.log(myMan.add());
-              console.log("CHECK INVENTORY? type check inventory."); 
-          
-          }
-
-      }
+    } else if (myBedroom.state === "open"){
+        console.log("You are in the bedroom ");
+        console.log("Check for hidden items? Type: search (room name)");
+        if(newlocation.includes('search') && newlocation.includes('bedroom')){
+        Task2.flip();
+        console.log(myNote.add());
+        console.log(myClock.add());
+        console.log(myFlashlight.add());
+        console.log(myMan.add());
+        console.log("CHECK INVENTORY? type check inventory."); 
+        }
+    }
      
-    
   } else if (newlocation.includes('talk to man') && playerInventory.includes('man')) {
-    console.log(myMan.mancontainer());
-    if (mancontainer.length === 1){   
+        console.log(myMan.mancontainer());
+        if (mancontainer.length === 1){   
         console.log(myMan.read1());
         console.log(myMan.flip());
-    }
-    if (mancontainer.length === 2 && myMan.state === true ){
+        }
+        if (mancontainer.length === 2 && myMan.state === true ){
         console.log(myMan2.read1());
         myKitchen.state = "open";
         Task3.flip();
         Task4.flip();
-    }
-
+        }
  } else if (newlocation.includes('note') && playerInventory.includes('note')) {
-       console.log(myNote.read1());
+        console.log(myNote.read1());
  } else if (newlocation.includes('kitchen')) {
-       ///
+    
+      ///
       //// Kitchen
       ///
-      if(myKitchen.state === "closed"){
+        if(myKitchen.state === "closed"){
         console.log(myKitchen.blockentry());
         console.log("I think I hear someone snoring in the bedroom...")
-      } else if (myKitchen.state === "open"){
-
+        } else if (myKitchen.state === "open"){
         console.log("You are in the kitchen");
         console.log("Check for hidden items? Type: search (room name)");
-          if(newlocation.includes('search') && newlocation.includes('kitchen')){
-              console.log(myDogbone.add());
-              console.log(myEnvelope.add());
-              Task5.flip();
-              console.log("CHECK INVENTORY? type check inventory."); 
-          }
-          
-      }
+        if(newlocation.includes('search') && newlocation.includes('kitchen')){
+        console.log(myDogbone.add());
+        console.log(myEnvelope.add());
+        Task5.flip();
+        console.log("CHECK INVENTORY? type check inventory."); 
+        }  
+        }
 
   } else if (newlocation.includes('envelope') && playerInventory.includes('envelope')) {
-      console.log(myEnvelope.read1());
-      console.log(myEnvelope.state = true);
-
-
-      
+        console.log(myEnvelope.read1());
+        console.log(myEnvelope.state = true);
   } else if(newlocation.includes("12345")){
-    console.log("that's the right code");
-    myYard.state = "open";
-    Task6.flip();
+        console.log("that's the right code");
+        myYard.state = "open";
+        Task6.flip();
   } else if (newlocation.includes("yard")){
-      ///
-      //// Yard
-      ///           
-      if(myYard.state === "closed"){
-          console.log(myYard.blockentry());
-          console.log("barking in the distance\n I think that man\'s lost dog is behind this door. But this door is locked. (there's a number pad lock)\n Come back to the YARD when you have the 5-digit code. What's the code?");
-           ///// ENTER  IF / ELSE  PASSCODE  checker here
+        ///
+        //// Yard
+        ///           
+        if(myYard.state === "closed"){
+        console.log(myYard.blockentry());
+        console.log("barking in the distance\n I think that man\'s lost dog is behind this door. But this door is locked. (there's a number pad lock)\n Come back to the YARD when you have the 5-digit code. What's the code?");
+             ///// ENTER  IF / ELSE  PASSCODE  checker here
         } else if (myYard.state === 'open' && myEnvelope.state === true) {
-          console.log ("you are in the YARD");
-          Task7.flip();
-          console.log(" ...barking in the distance... " + " What can I do to attract the dog? Shall I check my inventory?");
-      }
-     
+        console.log ("you are in the YARD");
+        Task7.flip();
+        console.log(" ...barking in the distance... " + " What can I do to attract the dog? Shall I check my inventory?");
+        }
+       
   } else if (newlocation.includes('use dogbone') && playerInventory.includes('dogbone') && myYard.state === "open") {
-      Task8.flip();
-      console.log(myDogbone.read1());
-      console.log("THANK YOU SO MUCH!! You've found my dog.\n THE END");
-      process.exit();
-      ///
-      //// GAME END
-      ///   
+        Task8.flip();
+        console.log(myDogbone.read1());
+        console.log("THANK YOU SO MUCH!! You've found my dog.\n THE END");
+        process.exit();
+        ///
+        //// GAME END
+        ///   
+ 
   } else if(newlocation.includes("change") || newlocation.includes("leave")){
-      console.log('You are back in the main foyer. Rooms available to visit: ' + visitedRooms['roomsAvailable'] + " " + "Which room do you want to visit?");
+        console.log('You are back in the main foyer. Rooms available to visit: ' + visitedRooms['roomsAvailable'] + " " + "Which room do you want to visit?");
   } else if (newlocation.includes("exit") || newlocation.includes("quit")) {
-      process.exit();
+        process.exit();
   } else if(newlocation.includes("inventory")){
-      console.log(playerInventory);
-      console.log("length is " + playerInventory.length);
-      console.log("Type 'use [item]' or 'talk to [item]'");
+        console.log(playerInventory);
+        console.log("length is " + playerInventory.length);
+        console.log("Type 'use [item]' or 'talk to [item]'");
   } else {
-      console.log( "Do you like apple pie? What would you like to do next?");
+        console.log( "Do you like apple pie? What would you like to do next?");
   }
-});
+  });

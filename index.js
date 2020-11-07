@@ -86,6 +86,11 @@ class Object{
       playerInventory.push(this.item);
       return "Print playerInventory " +  playerInventory.length;
   }
+
+    removeItem() {
+      console.log ("Position of " + this.item + " " + playerInventory.indexOf(this.item));
+      console.log ("how to remove " + this.item + playerInventory.splice(this.item));
+  }
  
     mancontainer(){
         mancontainer.push(this.item);
@@ -215,6 +220,10 @@ process.stdin.on("data", (chunk) => {
         console.log(myEnvelope.read1());
         console.log(myEnvelope.state = true);
         
+  } else if (newlocation.includes('use flashlight') && playerInventory.includes('flashlight')) {
+        console.log(myFlashlight.removeItem()); /// CONTINUE CODE7
+        
+        console.log("flashlight was removed from PlayerInventory, CHECK INVENTORY")
   } else if(newlocation.includes("12345")){
         console.log("that's the right code");
         if(myEnvelope.state == true && Task4.state == true && Task5.state == true){

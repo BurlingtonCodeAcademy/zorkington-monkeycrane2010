@@ -89,7 +89,6 @@ class Object{
 
     removeItem() {
       console.log ("Position of " + this.item + " " + playerInventory.indexOf(this.item));
-      console.log ("how to remove " + this.item + playerInventory.splice(this.item));
   }
  
     mancontainer(){
@@ -160,7 +159,6 @@ process.stdin.on("data", (chunk) => {
         "Task 6: " + Task6.describe() + " - " + Task6.state + "\n" +
         "Task 7: " + Task7.describe() + " - " + Task7.state + "\n" +
         "Task 8: " + Task8.describe() + " - " + Task8.state);
-        console.log("Here are your game controls:");
   } else if (newlocation.includes("read sign")){
         console.log("The sign says 'Welcome to Burlington Code Academy!' Come on in....");
         console.log("Type 'menu' then press ENTER");
@@ -204,7 +202,7 @@ process.stdin.on("data", (chunk) => {
       ///
         if(myKitchen.state === "closed"){
         console.log(myKitchen.blockentry());
-        console.log("I think I hear someone snoring in the bedroom...")
+        console.log("I think I hear snoring coming from the bedroom....")
         } else if (myKitchen.state === "open"){
         console.log("You are in the kitchen");
         console.log("Check for hidden items? Type: search (room name)");
@@ -222,7 +220,7 @@ process.stdin.on("data", (chunk) => {
         
   } else if (newlocation.includes('use flashlight') && playerInventory.includes('flashlight')) {
         console.log(myFlashlight.removeItem()); /// CONTINUE CODE7
-        
+        console.log(playerInventory.splice(2,1));
         console.log("flashlight was removed from PlayerInventory, CHECK INVENTORY")
   } else if(newlocation.includes("12345")){
         console.log("that's the right code");
@@ -236,11 +234,11 @@ process.stdin.on("data", (chunk) => {
         ///           
         if(myYard.state === 'closed'){
         console.log(myYard.blockentry());
-        console.log("This door is locked. Could that man's dog be behind the door? If only I knew the 5-digit code.");
+        console.log("This door is locked. If only I knew the 5-digit code.(dog barking behind door)");
         } else if (myYard.state === 'open' && myEnvelope.state === true) {
         console.log ("you are in the yard");
         Task7.setTrue();
-        console.log("What can I use to attract the dog? (CHECK YOUR INVENTORY)");
+        console.log("*barking in the distance* What can I use to attract that dog? (CHECK YOUR INVENTORY)");
         }
        
   } else if (newlocation.includes('use dogbone') && playerInventory.includes('dogbone') && myYard.state === "open" && myKitchen.state === "open") {

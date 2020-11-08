@@ -146,7 +146,7 @@ let Task8 = new Mission('task8', 'Yard - feed hungry dog', false);
 ////
 ///////  'YOU' , the PLAYER
 ///
-console.log("182 Main St. You are standing on Main Street between Church and South Winooski. There is a door here. On the door is a handwritten sign. TYPE 'read sign', press ENTER");
+console.log("/////\n" + "/// START GAME:\n" + " " + "182 Main St. You are standing on Main Street between Church\n and South Winooski. There is a door here.\n On the door is a handwritten sign.\n TYPE 'read sign', press ENTER");
 process.stdin.on("data", (chunk) => {
   let newlocation = chunk.toString().trim();
   if (newlocation.includes("menu")){
@@ -173,10 +173,17 @@ process.stdin.on("data", (chunk) => {
         console.log("Check for hidden items? Type: search (room name)");
         if(newlocation.includes('search bedroom')){
         Task2.setTrue();
+        if(
+          playerInventory.includes("note") === false &&
+          playerInventory.includes("clock") === false &&
+          playerInventory.includes("flashlight") === false &&
+          playerInventory.includes("man") === false
+        ){
         console.log(myNote.add());
         console.log(myClock.add());
         console.log(myFlashlight.add());
         console.log(myMan.add());
+        }
         console.log("CHECK INVENTORY? type check inventory."); 
         }
     }
@@ -207,8 +214,11 @@ process.stdin.on("data", (chunk) => {
         console.log("You are in the kitchen");
         console.log("Check for hidden items? Type: search (room name)");
         if(newlocation.includes('search kitchen')){
-        console.log(myDogbone.add());
-        console.log(myEnvelope.add());
+          console.log("You searched for KITCHEN")
+          if(playerInventory.includes("dogbone") === false && playerInventory.includes("envelope") === false){
+            console.log(myDogbone.add());
+            console.log(myEnvelope.add());
+          }
         Task5.setTrue();
         console.log("CHECK INVENTORY? type check inventory."); 
         }  
@@ -238,7 +248,7 @@ process.stdin.on("data", (chunk) => {
         } else if (myYard.state === 'open' && myEnvelope.state === true) {
         console.log ("you are in the yard");
         Task7.setTrue();
-        console.log("*barking in the distance* What can I use to attract that dog? (CHECK YOUR INVENTORY)");
+        console.log("*barking in the distance*\n What can I use to attract that dog?\n (CHECK YOUR INVENTORY)");
         }
        
   } else if (newlocation.includes('use dogbone') && playerInventory.includes('dogbone') && myYard.state === "open" && myKitchen.state === "open") {

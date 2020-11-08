@@ -89,6 +89,8 @@ class Object{
 
     removeItem() {
       console.log ("Position of " + this.item + " " + playerInventory.indexOf(this.item));
+      let selectedItem = playerInventory.indexOf(this.item);
+      console.log("Splice it: " + playerInventory.splice(selectedItem,1));
   }
  
     mancontainer(){
@@ -229,10 +231,10 @@ process.stdin.on("data", (chunk) => {
         console.log(myEnvelope.state = true);
         
   } else if (newlocation.includes('use flashlight') && playerInventory.includes('flashlight')) {
-        console.log(myFlashlight.removeItem()); /// CONTINUE CODE7
-        console.log(playerInventory.splice(2,1));
-        console.log("flashlight was removed from PlayerInventory, CHECK INVENTORY")
-  } else if(newlocation.includes("12345")){
+        console.log(myFlashlight.removeItem()); /// REMOVE ITEM
+  } else if (newlocation.includes('use clock') && playerInventory.includes('clock')) {
+    console.log(myClock.removeItem());
+  }else if(newlocation.includes("12345")){
         console.log("that's the right code");
         if(myEnvelope.state == true && Task4.state == true && Task5.state == true){
           myYard.state = "open";
